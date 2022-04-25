@@ -6,7 +6,7 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     if (argc < 3) {
-        cerr << "Missing arguments. Usage: signal1 <pid> <signal>" << endl;
+        cerr << "Usage: " << argv[0] << " <pid> <signal>" << endl;
         return 1;
     }
 
