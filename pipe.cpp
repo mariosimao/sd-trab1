@@ -58,6 +58,12 @@ int main(int argc, char const *argv[])
         cout << "Number\tResult" << endl;
         while (read(pipeFileDescriptor[0], &buf, 20) > 0) {
             int childInput = atoi(buf);
+
+            if (childInput == 0) {
+                close(pipeFileDescriptor[0]);
+                _exit(EXIT_SUCCESS);
+            }
+
             bool prime = isPrime(childInput);
             if (prime) {
                 cout << childInput << "\t\033[32mprime\033[0m" << endl;
@@ -65,10 +71,6 @@ int main(int argc, char const *argv[])
                 cout << childInput << "\t\033[31mnot prime\033[0m" << endl;
             }
         }
-
-        close(pipeFileDescriptor[0]);
-        _exit(EXIT_SUCCESS);
-
     } else { // Parent
         close(pipeFileDescriptor[0]);
 
@@ -81,6 +83,7 @@ int main(int argc, char const *argv[])
             sprintf(parentOutput, "%d", currentNumber);
             write(pipeFileDescriptor[1], parentOutput, 20);
         }
+        write(pipeFileDescriptor[1], "0", 20);
 
         close(pipeFileDescriptor[1]);
         wait(NULL);
