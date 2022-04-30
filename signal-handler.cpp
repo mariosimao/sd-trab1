@@ -9,23 +9,16 @@ void signalHandler(int signal)
     switch (signal) {
     case SIGINT:
         cout << "Interrupting..." << endl;
-        sleep(1);
         exit(0);
-        break;
     case SIGQUIT:
         cout << "Quitting..." << endl;
-        sleep(1);
         exit(0);
-        break;
     case SIGKILL:
         cout << "Killing..." << endl;
-        sleep(1);
         exit(0);
-        break;
     case SIGTERM:
         cout << "Terminating..." << endl;
         exit(0);
-        break;
     default:
         break;
     }
@@ -35,6 +28,7 @@ void signalHandler(int signal)
 
 int main(int argc, char const *argv[])
 {
+    // Register signal handler for signals 2, 3, 9 and 15
     signal(SIGINT, signalHandler);
     signal(SIGQUIT, signalHandler);
     signal(SIGKILL, signalHandler);
@@ -44,6 +38,7 @@ int main(int argc, char const *argv[])
     cout << "Starting process..." << endl;
     cout << "PID: " << pid << endl << endl;
 
+    // Default to busy waiting
     string waitType = "busy";
     if (argc > 1) {
         waitType = string(argv[1]);
@@ -55,7 +50,7 @@ int main(int argc, char const *argv[])
         getchar();
     } else {
         cerr << "Invalid wait type. Use 'busy' or 'blocking'." << endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     return 0;
