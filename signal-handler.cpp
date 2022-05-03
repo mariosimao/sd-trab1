@@ -6,16 +6,15 @@ using namespace std;
 
 void signalHandler(int signal)
 {
+    cout << "Signal received: " << signal << endl;
+
     switch (signal) {
     case SIGINT:
-        cout << "Interrupting..." << endl;
-        exit(0);
+        cout << "Fake interrupt..." << endl << endl;
+        break;
     case SIGQUIT:
-        cout << "Quitting..." << endl;
-        exit(0);
-    case SIGKILL:
-        cout << "Killing..." << endl;
-        exit(0);
+        cout << "Fake quit..." << endl << endl;
+        break;
     case SIGTERM:
         cout << "Terminating..." << endl;
         exit(0);
@@ -28,10 +27,9 @@ void signalHandler(int signal)
 
 int main(int argc, char const *argv[])
 {
-    // Register signal handler for signals 2, 3, 9 and 15
+    // Register signal handler for signals 2, 3 and 15
     signal(SIGINT, signalHandler);
     signal(SIGQUIT, signalHandler);
-    signal(SIGKILL, signalHandler);
     signal(SIGTERM, signalHandler);
 
     int pid = getpid();
