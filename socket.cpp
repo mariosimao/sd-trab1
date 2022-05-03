@@ -105,8 +105,6 @@ int main(int argc, char *argv[])
                 }
                 send(newSocketFileDescriptor, serverOutput, 20, 0);
             }
-
-            close(newSocketFileDescriptor);
         }
     } else if (mode == "client") {
         int socketFileDescriptor;
