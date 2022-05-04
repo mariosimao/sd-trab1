@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
                 &clientAddressLength
             );
 
-            while (recv(newSocketFileDescriptor, &buffer, 20, 0) > 0) {
+            while (read(newSocketFileDescriptor, &buffer, 20) > 0) {
                 // Convert socket input to int
                 int serverInput = atoi(buffer);
 
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
                 } else {
                     sprintf(serverOutput, "N");
                 }
-                send(newSocketFileDescriptor, serverOutput, 20, 0);
+                write(newSocketFileDescriptor, serverOutput, 20);
             }
         }
     } else if (mode == "client") {
@@ -159,8 +159,8 @@ int main(int argc, char *argv[])
             sprintf(clientOutput, "%d", currentNumber);
             cout << currentNumber << "\t";
 
-            send(socketFileDescriptor, clientOutput, 20, 0);
-            recv(socketFileDescriptor, &buffer, 20, 0);
+            write(socketFileDescriptor, clientOutput, 20);
+            read(socketFileDescriptor, &buffer, 20);
 
             if (buffer[0] == 'Y') {
                 cout << "\033[32mprime\033[0m" << endl;
