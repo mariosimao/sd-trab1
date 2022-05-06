@@ -67,7 +67,11 @@ int main(int argc, char *argv[])
          *
          * 5 = pending connections queue maximum size
          */
-        listen(socketFileDescriptor, 5);
+        int linstenResult = listen(socketFileDescriptor, 5);
+        if (linstenResult == -1) {
+            perror("lister");
+            exit(EXIT_FAILURE);
+        }
 
         cout << "Listening on "
              << inet_ntoa(serverAddress.sin_addr) << ":" << ntohs(serverAddress.sin_port) << endl;
