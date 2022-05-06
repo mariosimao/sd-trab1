@@ -7,11 +7,13 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    // Check arguments
     if (argc != 2) {
         cerr << "Usage: " << argv[0] << " <numbers>" << endl;
         exit(EXIT_FAILURE);
     }
 
+    // Convert input to int
     int numbers = atoi(argv[1]);
 
     // Based on "man pipe" https://man7.org/linux/man-pages/man2/pipe.2.html
@@ -19,11 +21,13 @@ int main(int argc, char const *argv[])
     pid_t childId;
     char buf[20];
 
+    // Create pipe
     if (pipe(pipeFileDescriptor) == -1) {
         perror("pipe");
         exit(EXIT_FAILURE);
     }
 
+    // Create child process
     childId = fork();
     if (childId == -1) {
         perror("fork");
@@ -44,8 +48,10 @@ int main(int argc, char const *argv[])
 
             bool prime = isPrime(childInput);
             if (prime) {
+                // \033[32m = green text, \033[0m back to normal
                 cout << childInput << "\t\033[32mprime\033[0m" << endl;
             } else {
+                // \033[31m = red text
                 cout << childInput << "\t\033[31mnot prime\033[0m" << endl;
             }
         }
@@ -57,7 +63,7 @@ int main(int argc, char const *argv[])
             int currentNumber = generateNumber(previousNumber);
             previousNumber = currentNumber;
 
-            char parentOutput[20];
+            // Convert number to string with <bufferSize> bytes
             sprintf(parentOutput, "%d", currentNumber);
             write(pipeFileDescriptor[1], parentOutput, 20);
         }
