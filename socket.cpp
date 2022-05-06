@@ -168,8 +168,10 @@ int main(int argc, char *argv[])
             read(socketFileDescriptor, &buffer, bufferSize);
 
             if (buffer[0] == 'Y') {
+                // \033[32m = green text, \033[0m back to normal
                 cout << "\033[32mprime\033[0m" << endl;
             } else if (buffer[0] == 'N') {
+                // \033[31m = red text
                 cout << "\033[31mnot prime\033[0m" << endl;
             } else {
                 cerr << "Invalid server response." << endl;
