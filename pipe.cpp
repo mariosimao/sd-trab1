@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
 
             if (childInput == 0) {
                 close(pipeFileDescriptor[0]);
-                _exit(EXIT_SUCCESS);
+                exit(EXIT_SUCCESS);
             }
 
             bool prime = isPrime(childInput);
@@ -56,6 +56,9 @@ int main(int argc, char const *argv[])
                 cout << childInput << "\t\033[31mnot prime\033[0m" << endl;
             }
         }
+
+        close(pipeFileDescriptor[0]);
+        exit(EXIT_SUCCESS);
     } else { // Parent
         close(pipeFileDescriptor[0]);
 

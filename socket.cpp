@@ -105,7 +105,12 @@ int main(int argc, char *argv[])
 
                 write(newSocketFileDescriptor, serverOutput, bufferSize);
             }
+
+            close(newSocketFileDescriptor);
         }
+
+        close(socketFileDescriptor);
+        exit(EXIT_SUCCESS);
     } else if (mode == "client") {
         int socketFileDescriptor;
         struct sockaddr_in serverAddress;
@@ -173,6 +178,9 @@ int main(int argc, char *argv[])
         }
 
         send(socketFileDescriptor, "0", bufferSize, 0);
+
+        close(socketFileDescriptor);
+        exit(EXIT_SUCCESS);
     } else {
         usageErrorMessage(argv);
     }
