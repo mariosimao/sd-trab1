@@ -19,7 +19,8 @@ int main(int argc, char const *argv[])
     // Based on "man pipe" https://man7.org/linux/man-pages/man2/pipe.2.html
     int pipeFileDescriptor[2];
     pid_t childId;
-    char buf[20];
+    const int bufferSize = 20;
+    char buffer[bufferSize];
 
     // Create pipe
     if (pipe(pipeFileDescriptor) == -1) {
@@ -38,8 +39,8 @@ int main(int argc, char const *argv[])
         close(pipeFileDescriptor[1]);
 
         cout << "Number\tResult" << endl;
-        while (read(pipeFileDescriptor[0], &buf, 20) > 0) {
-            int childInput = atoi(buf);
+        while (read(pipeFileDescriptor[0], &buffer, bufferSize) > 0) {
+            int childInput = atoi(buffer);
 
             if (childInput == 0) {
                 close(pipeFileDescriptor[0]);
@@ -64,10 +65,13 @@ int main(int argc, char const *argv[])
             previousNumber = currentNumber;
 
             // Convert number to string with <bufferSize> bytes
+            char parentOutput[bufferSize];
             sprintf(parentOutput, "%d", currentNumber);
-            write(pipeFileDescriptor[1], parentOutput, 20);
+
+            write(pipeFileDescriptor[1], parentOutput, bufferSize);
         }
-        write(pipeFileDescriptor[1], "0", 20);
+
+        write(pipeFileDescriptor[1], "0", bufferSize);
 
         close(pipeFileDescriptor[1]);
         wait(NULL);

@@ -29,10 +29,12 @@ int main(int argc, char *argv[])
     string mode = string(argv[1]);
     int port = atoi(argv[2]);
 
+    const int bufferSize = 20;
+
     if (mode == "server") {
         int socketFileDescriptor, newSocketFileDescriptor;
         struct sockaddr_in serverAddress, clientAddress;
-        char buffer[20];
+        char buffer[bufferSize];
 
         /**
          * Create socket
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
                 &clientAddressLength
             );
 
-            while (read(newSocketFileDescriptor, &buffer, 20) > 0) {
+            while (read(newSocketFileDescriptor, &buffer, bufferSize) > 0) {
                 // Convert socket input to int
                 int serverInput = atoi(buffer);
 
@@ -97,19 +99,20 @@ int main(int argc, char *argv[])
                 bool prime = isPrime(serverInput);
 
                 // Convert
-                char serverOutput[20];
+                char serverOutput[bufferSize];
                 if (prime) {
                     sprintf(serverOutput, "Y");
                 } else {
                     sprintf(serverOutput, "N");
                 }
-                write(newSocketFileDescriptor, serverOutput, 20);
+
+                write(newSocketFileDescriptor, serverOutput, bufferSize);
             }
         }
     } else if (mode == "client") {
         int socketFileDescriptor;
         struct sockaddr_in serverAddress;
-        char buffer[20];
+        char buffer[bufferSize];
         int numbers;
 
         if (argc != 4) {
@@ -155,12 +158,12 @@ int main(int argc, char *argv[])
             int currentNumber = generateNumber(previousNumber);
             previousNumber = currentNumber;
 
-            char clientOutput[20];
+            char clientOutput[bufferSize];
             sprintf(clientOutput, "%d", currentNumber);
             cout << currentNumber << "\t";
 
-            write(socketFileDescriptor, clientOutput, 20);
-            read(socketFileDescriptor, &buffer, 20);
+            write(socketFileDescriptor, clientOutput, bufferSize);
+            read(socketFileDescriptor, &buffer, bufferSize);
 
             if (buffer[0] == 'Y') {
                 cout << "\033[32mprime\033[0m" << endl;
@@ -172,7 +175,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        send(socketFileDescriptor, "0", 20, 0);
+        send(socketFileDescriptor, "0", bufferSize, 0);
     } else {
         usageErrorMessage(argv);
     }
